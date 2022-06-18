@@ -1,0 +1,30 @@
+<h1>TODO: Add Transactions list here</h1>
+<ol>
+      <li>Create a reusable search component(use it here to serach transaction by Customer ID)<li>
+        <li>Display the search results below</li>
+
+</ol>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Transaction Id</th>
+      <th>Customer Id</th>
+      <th>Account No</th>
+      <th>Amount</th>
+      <th>Balance</th>
+      <th>Trn Type</th>
+      <th>Debit/Credit</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let transactions of transactions | async">
+      <td>{{ transactions.transactionId}}</td>
+      <td>{{transactions.customerId}}</td>
+      <td>{{transactions.accountNo}}</td>
+      <td>{{transactions.amount}}</td>
+      <td>{{transactions.balance}}</td>
+      <td>{{transactions.transactionType}}</td>
+      <td>{{transactions.debitOrCredit}}</td>
+    </tr>
+  </tbody>
+</table>

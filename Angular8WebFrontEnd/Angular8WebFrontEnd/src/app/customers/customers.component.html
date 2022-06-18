@@ -1,0 +1,31 @@
+<h1>TODO: Update UI and add Customers list here</h1>
+<ol>
+  <li>
+    NB: Customer A/c and Customer A/c Balance(From Accounts table) are required
+    for every Customer. Update the API accordingly to return the expected data.
+  </li>
+  <li>Create/reuse a reusable search component(use it here to search by Customer Id)<li>
+    <li>Display the search results below</li>
+</ol>
+<table class="table">
+  <thead>
+    <tr>
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th>Email</th>
+      <th>Customer Id</th>
+      <th>Customer A/c</th>
+      <th>Customer A/c Balance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let customers of customers | async">
+      <td>{{customers.firstName}}</td>
+      <td>{{customers.lastName}}</td>
+      <td>{{customers.customerId}}</td>
+      <td>{{customers.email}}</td>
+      <td>{{customers.firstName}}</td>
+      <td>{{customers.lastName}}</td>
+    </tr>
+  </tbody>
+</table>
