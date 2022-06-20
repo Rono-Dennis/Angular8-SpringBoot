@@ -12,8 +12,8 @@ export class AccountbalanceService {
     private baseUrl = "http://localhost:8092/springboot-rest-api/api/v1/accounts/";
     constructor(private http: HttpClient) {}
 
-    updateTransactions(accountNo: String, value: any): Observable<Object> {
-        return this.http.put(`${this.baseUrl}/${accountNo}`, value);
+    findBalance(accountNo): Observable<Object> {
+        return this.http.get(`${this.baseUrl}/${accountNo}`);
       } 
 }
 

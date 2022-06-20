@@ -30,11 +30,15 @@ import com.comulynx.wallet.rest.api.repository.WebuserRepository;
 @RequestMapping("/api/v1/webusers")
 public class WebuserController {
 
+
+
 	@Autowired
 	private WebuserRepository webuserRepository;
 
 	@Autowired
 	private Service service;
+
+
 
 	/**
 	 * TODO : Fix Webuser Login functionality
@@ -45,18 +49,24 @@ public class WebuserController {
 	 * @return
 	 */
 	@PostMapping("/login")
-	public Webuser webuserLogin(@RequestBody Webuser webuser) {
+	public Webuser webuserLogin(@RequestBody Webuser webuser) throws Exception {
 //		try {
 
 
 			String  tempid = webuser.getEmployeeId();
 			String tempPass = webuser.getPassword();
 
+			if (tempid == null)
+			{
+				throw new Exception("User does not exist");
+			}else if(tempPass == null) {
+				throw new Exception("Invalid credentials");
+			}
+
 			 Webuser userObject = null;
-			if (tempid != null && tempPass !=null){
 				userObject = service.fetchEmployeeIdAndPassword(tempid,tempPass);
 
-			}
+
 
 
 			// TODO : Add Webuser login logic here. Login using employeeId and
@@ -93,8 +103,16 @@ public class WebuserController {
 	}
 
 	@PostMapping("/")
-	public ResponseEntity<?> createWebuser(@Valid @RequestBody Webuser webuser) {
+	public ResponseEntity<?> createWebuser(@Valid @RequestBody Webuser webuser) throws ResourceNotFoundException{
 		try {
+
+//			Webuser webuser1 = webuserRepository.findByUserNameAndEmail(webuser.getUsername(),webuser.getEmail());
+			Webuser webuser2 = webuserRepository.findByEmployeeIdAndCustomerId(webuser.getEmployeeId(),webuser.getCustomerId());
+
+
+			if (webuser2 != null){
+				throw new Exception("User ebuser with "+ webuser.getUsername() +" username already exist");
+			}
 			// TODO : Add logic to check if Webuser with provided username, or
 			// email, or employeeId, or customerId exists.
 			// If exists, throw a Webuser with [?] exists Exception.

@@ -1,11 +1,14 @@
 package com.comulynx.wallet.rest.api.controller;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.security.SecureRandom;
+import java.util.*;
 
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 import javax.validation.Valid;
 
+import com.comulynx.wallet.rest.api.model.AccountCustomer;
+import com.comulynx.wallet.rest.api.repository.CustomerAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +35,10 @@ public class CustomerController {
 
 	@Autowired
 	private CustomerRepository customerRepository;
+
+	@Autowired
+	private CustomerAccountRepository customerAccountRepository;
+
 	@Autowired
 	private AccountRepository accountRepository;
 
@@ -45,7 +52,6 @@ public class CustomerController {
 	@PostMapping("/login")
 	public ResponseEntity<?> customerLogin(@RequestBody Customer customer) {
 
-
 		try {
 
 			return ResponseEntity.status(200).body(HttpStatus.OK);
@@ -57,15 +63,20 @@ public class CustomerController {
 	}
 
 
+	@GetMapping("/transaction")
+	public ResponseEntity<List<AccountCustomer>>getAllTransaction(){
+		return ResponseEntity.ok(customerAccountRepository.findAllAccountCustomer());
+	}
+
 	@GetMapping("/")
 	public List<Customer> getAllCustomers() {
-		return customerRepository.findAll();
+		return (List<Customer>) customerRepository.findAll();
 	}
 
 	@GetMapping("/{customerId}")
 	public ResponseEntity<Customer> getCustomerByCustomerId(@PathVariable(value = "customerId") String customerId)
-			throws ResourceNotFoundException {
-		Customer customer = customerRepository.findByCustomerId(customerId)
+			throws Throwable {
+		Customer customer =  customerRepository.findByCustomerId(customerId)
 				.orElseThrow(() -> new ResourceNotFoundException("Customer not found for this id :: " + customerId));
 		return ResponseEntity.ok().body(customer);
 	}
@@ -73,6 +84,31 @@ public class CustomerController {
 	@PostMapping("/")
 	public ResponseEntity<?> createCustomer(@Valid @RequestBody Customer customer) {
 		try {
+
+			/** hashing pin*/
+
+			String hashPin = customer.getPin();
+
+			SecureRandom secureRandom = new SecureRandom();
+			byte[] salt = secureRandom.generateSeed(12);
+
+			PBEKeySpec pbeKeySpec = new PBEKeySpec(hashPin.toCharArray(), salt, 10, 512);
+			SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");
+			byte[] hash = skf.generateSecret(pbeKeySpec).getEncoded();
+
+			/* pin hashed */
+			String base64Hash = Base64.getMimeEncoder().encodeToString(hash);
+
+			/**Checking if username exist*/
+
+			Optional<Customer> customerId = Optional.ofNullable(customerRepository.
+					findByCustomerId(customer.getCustomerId())
+					.orElseThrow(() -> new ResourceNotFoundException("No such user with customerID" + customer.getCustomerId())));
+
+
+			 customerId.orElseThrow(() -> new ResourceNotFoundException("user of " + customerId+ "exist"));
+
+
 			// TODO : Add logic to Hash Customer PIN here
 			// TODO : Add logic to check if Customer with provided username, or
 			// customerId exists. If exists, throw a Customer with [?] exists
@@ -105,6 +141,34 @@ public class CustomerController {
 		return ResponseEntity.ok(updatedCustomer);
 	}
 
+//	@PostMapping("/{customerId}")
+//	public ResponseEntity<AccountCustomer> customerUpdate(@PathVariable(value = "customerId") String customerId,) throws ResourceNotFoundException){
+//
+
+//	}
+
+	/***find all customers with 'gmail' */
+	@GetMapping("/gmail")
+	public ResponseEntity<List<Customer>>getAllCustomerWithGmail(){
+		return ResponseEntity.ok(customerRepository.findAllCustomersWhoseEmailContainsGmail());
+	}
+
+	/**delete from repository query
+	 *
+	 * The code is commented since it throws illegalStateException
+	 * Ambiguous mapping
+	 * methods=[DELETE]}: There is already 'customerController' bean method
+	 * @return*/
+
+	/** i therefore comment this code to allow me proceed to run*/
+
+
+	/**@DeleteMapping("/{customerId}")
+	public ResponseEntity<Integer> deletingCustomer(@PathVariable(value = "customerId") String customerId) throws  Exception{
+		int customer = customerRepository.deleteCustomerByCustomerId(customerId);
+		return ResponseEntity.ok(customer);
+	}*/
+
 	@DeleteMapping("/{customerId}")
 	public Map<String, Boolean> deleteCustomer(@PathVariable(value = "customerId") String customerId)
 			throws ResourceNotFoundException {
@@ -117,14 +181,30 @@ public class CustomerController {
 		return response;
 	}
 
+
+
 	/**
 	 * generate a random but unique Account No (NB: Account No should be unique
 	 * in your accounts table)
 	 * 
 	 */
 	private String generateAccountNo(String customerId) {
+
+//		UUID uuid = UUID.randomUUID();
+		String chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijk"
+				+"lmnopqrstuvwxyz!@#$%&";
+
+		Random random = new Random();
+		StringBuilder builder = new StringBuilder(customerId);
+		for (int i = 0; i < customerId.length(); i++)
+			builder.append(chars.charAt(random.nextInt(chars.length())));
+		return builder.toString();
+
+		/**done
+		* */
+
 		// TODO : Add logic here - generate a random but unique Account No (NB:
 		// Account No should be unique in the accounts table)
-		return "";
+
 	}
 }

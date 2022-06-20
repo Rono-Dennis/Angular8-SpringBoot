@@ -7,6 +7,11 @@
   <li>Create/reuse a reusable search component(use it here to search by Customer Id)<li>
     <li>Display the search results below</li>
 </ol>
+<div>
+  <input type="text" name="first_name" [(ngModel)]="first_name" (ngModelChange)="Search()" placeholder="search">
+  <!-- <input  type="text" (keyup)="searchTerm.next($event)" placeholder="Search.." > -->
+  <!-- <button (click)="zoneName$.next(name.value)" type="submit"></button> -->
+</div>
 <table class="table">
   <thead>
     <tr>
@@ -19,13 +24,14 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let customers of customers | async">
-      <td>{{customers.firstName}}</td>
-      <td>{{customers.lastName}}</td>
-      <td>{{customers.customerId}}</td>
+    <tr *ngFor="let customers of customers | async ">
+      <!-- <tr *ngFor="let customers of searchResult$ | async; let i = index"></tr> -->
+      <td>{{customers.first_name}}</td>
+      <td>{{customers.last_name}}</td>
       <td>{{customers.email}}</td>
-      <td>{{customers.firstName}}</td>
-      <td>{{customers.lastName}}</td>
+      <td>{{customers.customer_id}}</td>
+      <td>{{customers.account_no}}</td>
+      <td>{{customers.balance}}</td>
     </tr>
   </tbody>
 </table>

@@ -3285,4 +3285,4 @@ INSERT INTO `webusers` (`username`, `password`, `first_name`, `last_name`, `emai
 INSERT INTO `webusers` (`username`, `password`, `first_name`, `last_name`, `email`, `employee_id`, `customer_id`) VALUES ('johndoe', 'johndoe', 'John', 'Doe', 'johndoe@gmail.com', 'EMP1002', 'C1002');
 INSERT INTO `webusers` (`username`, `password`, `first_name`, `last_name`, `email`, `employee_id`, `customer_id`) VALUES ('doe', 'doe', 'Tom', 'Doe', 'tomdoe@gmail.com', 'EMP1003', 'C1003');
 
-
+-- SELECT Customers.FIRST_NAME, Customers.LAST_NAME, Customers.EMAIL, Customers.CUSTOMER_ID, Accounts.ACCOUNT_NO, Accounts.balance FROM Customers INNER  join  Accounts  on Customers.customer_Id = Accounts.customer_Id

@@ -1,5 +1,9 @@
 package com.comulynx.wallet.rest.api.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,7 +11,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+@Data
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "transactions")
 public class Transaction {
     @Id
@@ -28,79 +35,5 @@ public class Transaction {
 	@Column(nullable = false)
 	private String debitOrCredit;
 	
-	public Transaction() {
-		
-	}
-	
 
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-	
-
-	public String getAccountNo() {
-		return accountNo;
-	}
-
-	public void setAccountNo(String accountNo) {
-		this.accountNo = accountNo;
-	}
-
-	public String getTransactionId() {
-		return transactionId;
-	}
-
-	public void setTransactionId(String transactionId) {
-		this.transactionId = transactionId;
-	}
-
-	public String getCustomerId() {
-		return customerId;
-	}
-
-	public void setCustomerId(String customerId) {
-		this.customerId = customerId;
-	}
-
-	public double getAmount() {
-		return amount;
-	}
-
-	public void setAmount(double amount) {
-		this.amount = amount;
-	}
-
-	public String getTransactionType() {
-		return transactionType;
-	}
-
-	public void setTransactionType(String transactionType) {
-		this.transactionType = transactionType;
-	}
-
-	
-
-	public double getBalance() {
-		return balance;
-	}
-
-
-	public void setBalance(double balance) {
-		this.balance = balance;
-	}
-
-
-	public String getDebitOrCredit() {
-		return debitOrCredit;
-	}
-
-	public void setDebitOrCredit(String debitOrCredit) {
-		this.debitOrCredit = debitOrCredit;
-	}
-	
-	
 }

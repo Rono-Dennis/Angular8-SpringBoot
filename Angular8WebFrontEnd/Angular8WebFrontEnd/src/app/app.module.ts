@@ -12,7 +12,10 @@ import { TransactionsComponent } from "./transactions/transactions.component";
 import { CustomersComponent } from "./customers/customers.component";
 import { AccountBalanceComponent } from './account-balance/account-balance.component';
 import { HttpClientModule } from "@angular/common/http";
-
+// import { NgSearchPipeModule} from "ng2-search-filter";
+import { Ng2SearchPipeModule } from "ng2-search-filter";
+import {Ng2OrderModule} from "ng2-order-pipe";
+// import {NgxPaginationModule} from "ngx-pagination";
 @NgModule({
   declarations: [
     AppComponent,
@@ -30,6 +33,10 @@ import { HttpClientModule } from "@angular/common/http";
     HttpClientModule,
     AppRoutingModule,
     FormsModule, 
+    // Ng2SearchPipeModule,
+    Ng2OrderModule,
+    // NgModule,
+    // NgxPaginationModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

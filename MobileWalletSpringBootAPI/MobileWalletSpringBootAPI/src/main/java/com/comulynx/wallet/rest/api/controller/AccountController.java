@@ -56,9 +56,11 @@ public class AccountController {
 			String customerId = balanceRequest.get("customerId").getAsString();
 			String accountNo = balanceRequest.get("accountNo").getAsString();
 
+			Account account = accountRepository.findByCustomerIdAndAccountNo(customerId,accountNo);
+
 			// TODO : Add logic to find account balance by CustomerId And
 			// AccountNo
-			Account account = null;
+//			Account account = null;
 			
 			response.addProperty("balance", account.getBalance());
 			System.out.println("response is: "+response);
