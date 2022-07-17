@@ -10,6 +10,8 @@ import javax.validation.Valid;
 import com.comulynx.wallet.rest.api.model.AccountCustomer;
 import com.comulynx.wallet.rest.api.repository.CustomerAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -17,7 +19,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -70,7 +71,8 @@ public class CustomerController {
 
 	@GetMapping("/")
 	public List<Customer> getAllCustomers() {
-		return (List<Customer>) customerRepository.findAll();
+
+		return (List<Customer>) customerRepository.findAllCustomersWhoseEmailContainsGmail();//findAll
 	}
 
 	@GetMapping("/{customerId}")
@@ -128,7 +130,7 @@ public class CustomerController {
 		}
 	}
 
-	@PutMapping("/{customerId}")
+	/*@PutMapping("/{customerId}")
 	public ResponseEntity<Customer> updateCustomer(@PathVariable(value = "customerId") String customerId,
 			@Valid @RequestBody Customer customerDetails) throws ResourceNotFoundException {
 		Customer customer = customerRepository.findByCustomerId(customerId)
@@ -139,7 +141,7 @@ public class CustomerController {
 		customer.setFirstName(customerDetails.getFirstName());
 		final Customer updatedCustomer = customerRepository.save(customer);
 		return ResponseEntity.ok(updatedCustomer);
-	}
+	}*/
 
 //	@PostMapping("/{customerId}")
 //	public ResponseEntity<AccountCustomer> customerUpdate(@PathVariable(value = "customerId") String customerId,) throws ResourceNotFoundException){
@@ -160,16 +162,24 @@ public class CustomerController {
 	 * methods=[DELETE]}: There is already 'customerController' bean method
 	 * @return*/
 
-	/** i therefore comment this code to allow me proceed to run*/
+	/** i therefore comment this code to allow me proceed to run
+	 * @return*/
 
-
-	/**@DeleteMapping("/{customerId}")
-	public ResponseEntity<Integer> deletingCustomer(@PathVariable(value = "customerId") String customerId) throws  Exception{
-		int customer = customerRepository.deleteCustomerByCustomerId(customerId);
-		return ResponseEntity.ok(customer);
-	}*/
 
 	@DeleteMapping("/{customerId}")
+	public Map<String, Boolean> deletingCustomer(@PathVariable(value = "customerId") String customerId) throws ResourceNotFoundException {
+		Customer customer = customerRepository.findByCustomerId(customerId)
+				.orElseThrow(() -> new ResourceNotFoundException("Customer not found for this id :: " + customerId));
+		System.out.println("--------changes=id=="+customerId);
+		System.out.println("--------changes==="+customer);
+		 customerRepository.delete(customer);
+//		customerRepository.delete(customer);
+		Map<String, Boolean> response = new HashMap<>();
+		response.put("deleted", Boolean.TRUE);
+		return response;
+	}
+
+	/*@DeleteMapping("/{customerId}")
 	public Map<String, Boolean> deleteCustomer(@PathVariable(value = "customerId") String customerId)
 			throws ResourceNotFoundException {
 		Customer customer = customerRepository.findByCustomerId(customerId)
@@ -179,7 +189,7 @@ public class CustomerController {
 		Map<String, Boolean> response = new HashMap<>();
 		response.put("deleted", Boolean.TRUE);
 		return response;
-	}
+	}*/
 
 
 

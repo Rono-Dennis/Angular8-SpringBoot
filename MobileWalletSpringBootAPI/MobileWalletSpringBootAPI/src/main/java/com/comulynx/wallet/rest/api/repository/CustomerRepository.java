@@ -1,10 +1,9 @@
 package com.comulynx.wallet.rest.api.repository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Stream;
 
-import com.comulynx.wallet.rest.api.model.AccountCustomer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -20,9 +19,13 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 	Optional<Customer> findByCustomerIdAndPin(String customerId, String pin);
 
 	// TODO : Implement the query and function below to delete a customer using Customer Id
-	@Modifying
-	 @Query("delete from Customer f where f.customerId =?1")
-	 int deleteCustomerByCustomerId(String customer_id);
+//	long deleteCustomerByCustomerId(String CustomerId);
+
+//	List<Customer> removeByCustomerId(String CustomerId);
+
+//	@Modifying
+//	 @Query("delete from Customer f where f.customerId =?1")
+//	Long deleteCustomerByCustomerId(String customer_id);
 
 	// TODO : Implement the query and function below to update customer firstName using Customer Id
 	 @Query("update Customer u set u.firstName = ?1 where u.customerId =?2")
