@@ -2,7 +2,10 @@ package com.comulynx.wallet.rest.api.controller;
 
 import java.util.List;
 
+import com.comulynx.wallet.rest.api.model.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -31,6 +34,9 @@ public class TransactionController {
 	@GetMapping("/")
 	public List<Transaction> getAllTransaction() {
 		return transactionRepository.findAll();
+//		return transactionRepository.findWithPageable(new PageRequest(0, 5, Sort.Direction.DESC, "id"));
+//		return transactionRepository.getMiniStatementCustomerIdAndAccountNo();
+//		return transactionRepository.findTransactionsByCustomerIdOrTransactionId();
 	}
 
 	/**
@@ -44,12 +50,24 @@ public class TransactionController {
 	public ResponseEntity<?> getTransactionsByCustomerIdOrTransactionId(
 			@PathVariable(value = "searchId") String customerIdOrAccountNo) throws ResourceNotFoundException {
 		List<Transaction> account = transactionRepository
-				.findTransactionsByCustomerIdOrTransactionId(customerIdOrAccountNo, customerIdOrAccountNo)
+				.findTransactionsByCustomerIdAndTransactionId(customerIdOrAccountNo, customerIdOrAccountNo)
 				.orElseThrow(() -> new ResourceNotFoundException(
 						"Account not found for this searchId :: " + customerIdOrAccountNo));
+		System.out.println("--------id no====="+customerIdOrAccountNo);
 
 		return ResponseEntity.ok().body(account);
 	}
+
+
+	@GetMapping("/transact/{customerId}")
+	public ResponseEntity<Transaction> getCustomerByCustomerId(@PathVariable(value = "customerId") String customerId)
+			throws Throwable {
+		Transaction transaction = (Transaction) transactionRepository.findByCustomerId(customerId)
+				.orElseThrow(() -> new ResourceNotFoundException("Customer not found for this id :: " + customerId));
+		System.out.println("-----------transaction"+ transaction);
+		return ResponseEntity.ok().body(transaction);
+	}
+
 
 	/**
 	 * Should return last 5 transactions from the database
@@ -68,7 +86,7 @@ public class TransactionController {
 
 			
 			List<Transaction> miniStatement = transactionRepository
-					.getMiniStatementUsingCustomerIdAndAccountNo(customerId, accountNo);
+					.getMiniStatementCustomerIdAndAccountNo(customerId, accountNo);
 
 			return ResponseEntity.ok().body(gson.toJson(miniStatement));
 		} catch (Exception ex) {
